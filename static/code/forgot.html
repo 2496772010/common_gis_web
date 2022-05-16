@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>forgot Password</title>
+    <link rel="stylesheet" href="forgotcss.css">
+</head>
+<body>
+    <div id="forgot-box">
+        <h1 >忘记密码</h1>
+        <div class="inputBox">
+            <form id="forms">
+            <div class="inputtext">
+                <input type="text" placeholder="用户名">
+            </div>
+            <div class="inputtext">
+                <input type="text" placeholder="电话号码">
+            </div>
+            <div class="inputtext">
+                <input type="text" placeholder="邮箱">
+            </div>
+            <div class="inputtext">
+                <input type="text" placeholder="验证码">
+            </div>
+            <div class="inputtext">
+                <input type="text" placeholder="新密码">
+            </div>
+            <div class="inputtext">
+                <input type="text" placeholder="重复新密码">
+            </div>
+                <button class="button" @click="clicked"><a class="aclass" href="login.html">提交</a></button>
+            </form>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+    var forgot = new Vue({
+        el: '#forgot-box',
+        data: {
+            clicked(){
+                alert("已提交，等待审核！")
+            }
+        }
+    })
+</script>
+</body>
+</html>

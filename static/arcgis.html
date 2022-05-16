@@ -1,0 +1,288 @@
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+  />
+  <title>
+    Edit features with the Editor widget | Sample | ArcGIS API for JavaScript
+    4.23
+  </title>
+  
+  <link
+      rel="stylesheet"
+      href="https://js.arcgis.com/4.23/esri/themes/light/main.css"
+  />
+  <script src="https://js.arcgis.com/4.23/"></script>
+  
+  <style>
+    html,
+    body,
+    #viewDiv {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+    
+    .esri-editor .esri-item-list__scroller {
+      max-height: 350px;
+    }
+  </style>
+  
+  <script>
+    require(["esri/WebMap", "esri/views/MapView", "esri/widgets/Editor",
+      "esri/layers/FeatureLayer", "esri/geometry/SpatialReference", "esri/layers/GraphicsLayer",
+      "esri/rest/query",
+      "esri/rest/support/Query",
+      "esri/rest/find", "esri/rest/support/FindParameters"], (
+      WebMap,
+      MapView,
+      Editor,
+      FeatureLayer,
+      SpatialReference,
+      GraphicsLayer, query, Query, find,
+      FindParameters
+    ) => {
+      let pointLayer, lineLayer, polygonLayer;
+      let sr = new SpatialReference('PROJCS["sh2000",GEOGCS["G_SH2000",DATUM["D_SH2000",SPHEROID["S_SH2000",6378245.0,298.3]],PRIMEM["Greenwich",0.0],UNIT["Degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["False_Easting",-3457147.81],PARAMETER["False_Northing",0.0],PARAMETER["Central_Meridian",121.2751921],PARAMETER["Scale_Factor",1.0],PARAMETER["Latitude_Of_Origin",0.0],UNIT["Meter",1.0]]')
+
+      const webmap = new WebMap({
+        spatialReference: sr,
+        layers: []
+      });
+
+      const view = new MapView({
+        container: "viewDiv",
+        map: webmap
+      });
+      let url='https://localhost:6443/arcgis/rest/services/cjwm/Mapserver'
+      let layer = new FeatureLayer({
+        name: 'cjmw1',
+        url: 'https://localhost:6443/arcgis/rest/services/cjwm/FeatureServer'
+      })
+      view.map.add(layer)
+
+      var params = new FindParameters({
+        layerIds: [0],
+        returnGeometry:true
+        
+      });
+      let lineUrl = 'https://localhost:6443/arcgis/rest/services/sh2000_feature_linear_layer/FeatureServer'
+      let pointUrl = 'https://localhost:6443/arcgis/rest/services/sh2000_feature_point_layer/FeatureServer'
+      let polygonUrl = 'https://localhost:6443/arcgis/rest/services/sh2000_feature_polygon_layer/FeatureServer'
+      let urls = [
+        lineUrl,
+        pointUrl,
+        polygonUrl
+      ]
+      let lineUrls = 'https://localhost:6443/arcgis/rest/services/sh2000_feature_linear_layer/Mapserver'
+      let pointUrls = 'https://localhost:6443/arcgis/rest/services/sh2000_feature_point_layer/Mapserver'
+      let polygonUrls = 'https://localhost:6443/arcgis/rest/services/sh2000_feature_polygon_layer/Mapserver'
+      let urlss = [
+        lineUrls,
+        pointUrls,
+        polygonUrls
+      ]
+      function initLayers() {
+        let baseUrl = 'https://localhost:6443/arcgis/rest/services/sh2000_feature_base_layer/MapServer';
+        let baseLayer = new FeatureLayer({
+          url: baseUrl
+        })
+        view.map.add(baseLayer)
+       
+        urls.forEach(url => {
+          let layer = new FeatureLayer({
+            url: url,
+            outFields: ["*"],
+          })
+          view.map.add(layer)
+        })
+      }
+      
+
+      // initLayers()
+      view.when(() => {
+        view.map.loadAll().then(() => {
+          view.map.allLayers.forEach((layer) => {
+            if (layer.type === "feature") {
+              switch (layer.geometryType) {
+                case "polygon":
+                  polygonLayer = layer;
+                  break;
+                case "polyline":
+                  lineLayer = layer;
+                  break;
+                case "point":
+                  pointLayer = layer;
+                  break;
+              }
+            }
+          });
+
+          // Create layerInfos for layers in Editor. This
+          // sets the fields for editing.
+
+          const pointInfos = {
+            layer: pointLayer,
+            formTemplate: {
+              // autocasts to FormTemplate
+              elements: [
+                {
+                  // autocasts to Field Elements
+                  type: "field",
+                  fieldName: "HazardType",
+                  label: "Hazard type"
+                },
+                {
+                  type: "field",
+                  fieldName: "Description",
+                  label: "Description"
+                },
+                {
+                  type: "field",
+                  fieldName: "SpecialInstructions",
+                  label: "Special Instructions"
+                },
+                {
+                  type: "field",
+                  fieldName: "Status",
+                  label: "Status"
+                },
+                {
+                  type: "field",
+                  fieldName: "Priority",
+                  label: "Priority"
+                }
+              ]
+            }
+          };
+
+          const lineInfos = {
+            layer: lineLayer,
+            formTemplate: {
+              // autocasts to FormTemplate
+              elements: [
+                {
+                  // autocasts to FieldElement
+                  type: "field",
+                  fieldName: "Severity",
+                  label: "Severity"
+                },
+                {
+                  type: "field",
+                  fieldName: "blocktype",
+                  label: "Type of blockage"
+                },
+                {
+                  type: "field",
+                  fieldName: "fullclose",
+                  label: "Full closure"
+                },
+                {
+                  type: "field",
+                  fieldName: "active",
+                  label: "Active"
+                },
+                {
+                  type: "field",
+                  fieldName: "locdesc",
+                  label: "Location Description"
+                }
+              ]
+            }
+          };
+
+          const polyInfos = {
+            layer: polygonLayer,
+            formTemplate: {
+              // autocasts to FormTemplate
+              elements: [
+                {
+                  // autocasts to FieldElement
+                  type: "field",
+                  fieldName: "incidenttype",
+                  label: "Incident Type"
+                },
+                {
+                  type: "field",
+                  fieldName: "activeincid",
+                  label: "Active"
+                },
+                {
+                  type: "field",
+                  fieldName: "descrip",
+                  label: "Description"
+                }
+              ]
+            }
+          };
+
+          const editor = new Editor({
+            view: view,
+            // layerInfos: [pointInfos, lineInfos, polyInfos]
+          });
+          let search = document.getElementById('searchInput')
+          window.addEventListener("keydown", function (e) {
+            let features=[]
+            if (e.key === 'Enter') {
+              params.searchText = search.value;
+              let allFind=[]
+              urlss.forEach(value => {
+                let findPromise=find.find(value,params)
+                allFind.push(findPromise)
+              })
+              Promise.all(allFind).then(res=>{
+                res.forEach(item=>{
+                  if(item['results'].length){
+                    features.push(item['results'][0].feature)
+                  }
+                })
+                console.log(features)
+                let fieldInfos=[]
+                for (const attributesKey in features[0].attributes) {
+                  fieldInfos.push({
+                    fieldName:attributesKey,
+                  })
+                }
+                const  features1=features.map(ft=>{
+                  ft.popupTemplate={
+                    title:'{name}',
+                    content:[{
+                      type:'fields',
+                      fieldInfos:fieldInfos
+                    }],
+                    
+                    outFields: ['*']
+                  }
+                  return ft
+                })
+                console.log(fieldInfos)
+                view.goTo(features1).then(function () {
+                  view.popup.open({
+                    features: features1,
+                    featureMenuOpen: true,
+                    updateLocationEnabled: true
+                  });
+                })
+              })
+              
+            }
+          })
+          // Add the widget to the view
+          view.ui.add(editor, "top-right");
+        });
+      });
+    });
+  </script>
+</head>
+
+<body>
+<div id="viewDiv">
+  <input type="text" placeholder="输入后回车进行搜索..."
+         id="searchInput"
+         style="position: absolute;left: 60px;top: 40px;width: 200px;height: 30px">
+</div>
+</body>
+</html>

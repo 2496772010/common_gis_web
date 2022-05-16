@@ -1,0 +1,57 @@
+{
+  "name": "common_gis_web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "@supermap/iclient-ol": "^10.1.2",
+    "axios": "^0.21.1",
+    "core-js": "^3.6.5",
+    "element-plus": "1.0.2-beta.48",
+    "less": "^4.1.2",
+    "less-loader": "^4.1.0",
+    "moment": "^2.29.3",
+    "ol-ext": "^3.2.22",
+    "photo-sphere-viewer": "^4.6.1",
+    "turf": "^3.0.14",
+    "vue": "^3.0.0",
+    "vue-router": "^4.0.12",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "@vue/compiler-sfc": "^3.0.0",
+    "babel-eslint": "^10.1.0",
+    "babel-plugin-import": "^1.13.3",
+    "eslint": "^6.7.2",
+    "eslint-plugin-vue": "^7.0.0",
+    "file-save": "^0.2.0",
+    "style-resources-loader": "^1.5.0",
+    "vue-cli-plugin-style-resources-loader": "^0.1.5"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/vue3-essential",
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "parser": "babel-eslint"
+    },
+    "rules": {}
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}

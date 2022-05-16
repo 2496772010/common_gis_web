@@ -1,0 +1,85 @@
+body{
+  background:url("16090387821621.jpg") left top repeat;
+  background-size: 100% 100%;
+  z-index: -1;
+}
+
+.registers{
+  height: 500px;
+  width: 480px;
+  margin-top: 200px;
+  margin-left: 42%;
+}
+.input{
+  size: 30px;
+  box-sizing: border-box;
+  width: 100%;
+  padding-left: 10px;
+  height: 50px;
+  margin-top: 30px;
+}
+
+.text{
+  width: 300px;
+  height: 40px;
+  border-radius: 10px;
+  outline: none;
+  border: 5px deepskyblue;
+  background-color: rgb(143, 194, 236);
+}
+
+input[type=text]:focus {
+  background-color: lightblue;
+}
+
+
+a{
+  color: cadetblue;
+  text-decoration: none;
+}
+
+.button{
+  text-decoration: none;
+  position: absolute;
+  transform: translate(-50%,-50%);
+  font-size: 35px;
+  background:linear-gradient(90deg,#03a9f4, #41d0f4, #3b9aff,#03a9f4);
+  width: 220px;
+  height: 60px;
+  color: white;
+  line-height: 40px;
+  text-transform: uppercase;
+  border-radius: 50px;
+  background-size: 400%;
+  z-index: 1;
+  padding-top: -10px;
+  border: none;
+  outline: none;
+  margin-top: 30px;
+  margin-left: 140px;
+  size: 200px;
+}
+
+.button :hover::before{
+  animation: sun 8s infinite;
+}
+.button::before{
+  content: "";
+  position: absolute;
+  left: -5px;
+  right: -5px;
+  top:-5px;
+  bottom: -5px;
+  background:linear-gradient(90deg,#03a9f4, #41d0f4, #3b9aff,#03a9f4);
+  background-size: 200%;
+  border-radius: 50px;
+  filter: blur(15px);
+  z-index: -1;
+}
+
+
+@keyframes sun{
+  100%{
+    background-position: -400% 0;
+  }
+}

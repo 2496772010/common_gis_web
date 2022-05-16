@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="Register.css">
+</head>
+<body>
+<div class="registers" id="register">
+    <div>
+        <form id="forms">
+            <div style="height: 40px"></div>
+            <div class="input">
+                <input type="text" class="text" placeholder="昵称(2~5位汉字或5-16英文字母或数字)" id="昵称" @input="names">
+                <span id="nameif">{{namess}}</span>
+            </div>
+            <div class="input">
+        <span>
+          <input type="text" class="text" placeholder="手机账号(11位数字)" id="手机" @input="PEs">
+        </span>
+                <span id="PEif">{{PEss}}</span>
+            </div>
+            <div class="input">
+                <input type="text" class="text" placeholder="密码(8~16字母数字)" id="密码" @input="passwords">
+                <span id="passwordif">{{passwordss}}</span>
+            </div>
+            <div class="input">
+                <input type="text" class="text" placeholder="确认密码" id="确认密码" @input="password1s">
+                <span id="password1if">{{password1ss}}</span>
+            </div>
+            <div class="input" style="margin-top: 0px;">
+                <input type="checkbox" id="select" onchange="checkeds()"><a href="#">《**用户使用协议》</a>和<a href="#">《**用户隐私政策》</a>
+            </div>
+            <div>
+                <button type="submit" class="button" @click="sub">注册</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    var namepd = false;
+    var PEpd = false;
+    var passwordpd = false;
+    var password1pd = false;
+    var selects = false;
+
+    function checkeds() {
+        selects = !selects;
+    }
+
+    function loct() {
+        location.href = "test.html";
+    }
+
+    var register = new Vue({
+        el: '#register',
+        data: {
+            namess: "",
+            PEss: "",
+            passwordss: "",
+            passwordsss: "",
+            password1ss: "",
+            alerts: "",
+            yes: false,
+        },
+        methods: {
+            sub: function () {
+                if (!selects && !namepd && !PEpd && !passwordpd && !password1pd) {
+                    alert("输入有误！请注意每个文本框之后的提示");
+                    return;
+                }
+                window.event.returnValue = false;
+                let myname = document.getElementById("昵称").value
+                let myphone = document.getElementById("手机").value;
+                let mypassword = document.getElementById("密码").value;
+                var that = this.alerts;
+                axios.get("http://localhost:8080/register", {
+                    params: {
+                        name: myname,
+                        username: myphone,
+                        password: mypassword,
+                    }//传入昵称、账号和密码
+                }).then(function (response) {
+                    that = "注册成功!,即将跳转至登录界面"
+                }).catch(function (err) {
+                        that = err.msg;
+                    }
+                ).then(function () {
+                    window.location.href = "login.html"
+                    return;
+                }).finally(() => {
+                    window.location.href = "login.html"
+                })
+            },
+
+            names(event) {
+                const name = document.getElementById("nameif");
+                const nameChinese = /^[\u4E00-\u9FA3]{2,5}$/
+                const namezifu = /^[a-zA-Z0-9]{5,16}$/
+                if (nameChinese.test(event.target.value) || namezifu.test(event.target.value)) {
+                    namepd = true;
+                    this.namess = "格式正确"
+                    name.style.color = "springgreen";
+                } else {
+                    namepd = false;
+                    this.namess = "格式错误"
+                    name.style.color = "#f441a5";
+                }
+            },
+
+            PEs(event) {
+                let phone = document.getElementById("手机");
+                const PE = document.getElementById("PEif");
+                const phoneR = /^[0-9]{11,11}$/;
+                if (phoneR.test(event.target.value)) {
+                    PEpd = true;
+                    this.PEss = "格式正确"
+                    PE.style.color = "springgreen";
+                } else {
+                    PEpd = false;
+                    this.PEss = "格式错误"
+                    PE.style.color = "#f441a5";
+                }
+
+            },
+            passwords(event) {
+                passwordsss = event.target.value;
+                const passwordR = /^[0-9a-zA-Z]{8,16}$/;
+                const password = document.getElementById("passwordif");
+                if (passwordR.test(event.target.value)) {
+                    passwordpd = true;
+                    this.passwordss = "格式正确"
+                    password.style.color = "springgreen";
+                } else {
+                    passwordpd = false;
+                    this.passwordss = "格式错误"
+                    password.style.color = "#f441a5";
+                }
+            },
+
+            password1s(event) {
+                const password1 = document.getElementById("password1if");
+                const password = document.getElementById("passwordif");
+                if (passwordsss == event.target.value) {
+                    password1pd = true;
+                    this.password1ss = "输入一致"
+                    password1.style.color = "springgreen";
+                } else {
+                    password1pd = true;
+                    this.password1ss = "两次密码输入不一致"
+                    password1.style.color = "#f441a5";
+                }
+            }
+
+        }
+    })
+
+
+</script>
+</body>
+</html>

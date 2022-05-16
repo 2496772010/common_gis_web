@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>登录</title>
+  <link rel="stylesheet" href="./testcss.css">
+
+</head>
+<body>
+<div style="position: fixed;top: 0;width: 100%;height: 100px;display: flex;
+line-height: 100px;
+justify-content: center;
+    align-content: center;
+    font-family: cursive;
+    font-size: 40px;">
+  基于GIS的邯郸旅游系统
+</div>
+<div id="login-box">
+  <div style="height: 20px">
+  </div>
+  <div>
+    <span class="input-box">
+    <i class="iconfont">&#xe60b;</i>
+    <input type="text" id="username" placeholder="用户账号" key="username">
+    </span>
+  </div>
+  <div class="input-box">
+    <i class="iconfont">&#xe606;</i>
+    <input type="text" placeholder="密码" id="password">
+  </div>
+  <button id="login" @click="sub" style="cursor: pointer">登录</button>
+  <div>
+    <span><a href="Register.html">注册</a></span>
+    <div style="display: inline-block;width: 7vw"></div>
+    <span><a href="forgot.html">忘记密码</a></span>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script>
+    var login = new Vue({
+      el: '#login-box',
+      data: {
+        alerts: "",
+        yes: false,
+      },
+      methods: {
+        sub: function () {
+          let myusername = document.getElementById("username").value;
+          let mypassword = document.getElementById("password").value;
+          var that = this;
+          axios.get("http://localhost:8080/login", {
+              params: {
+                username: myusername,
+                password: mypassword,
+              }
+            }
+          ).then(function (response) {
+            that.yes = true;
+            that.alerts = response.data;//获取返回的昵称
+          }, function (err) {
+            that.alerts = err.msg;
+          }).then(function () {
+            window.location.href = "dist/travel.html";//跳转界面
+          }).finally(() => {
+            window.location.href = "dist/travel.html";//跳转界面
+          })
+        }
+      }
+    })
+  </script>
+
+</body>
+</html>
