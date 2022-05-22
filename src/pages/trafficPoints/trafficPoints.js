@@ -8,7 +8,7 @@ import {
   ElMenu,
   ElMenuItem,
   ElSubmenu, ElInput, ElInputNumber,
-  ElSelect, ElOption, ElForm, ElFormItem, ElTable, ElTableColumn
+  ElSelect, ElOption, ElForm, ElFormItem, ElTable, ElTableColumn, ElDialog
 } from 'element-plus';
 import App from './trafficPointsApp.vue';
 // 如果要使用.scss样式文件，则需要引入base.scss文件
@@ -32,5 +32,6 @@ app.component(ElForm.name,ElForm)
 app.component(ElFormItem.name,ElFormItem)
 app.component(ElTable.name,ElTable)
 app.component(ElTableColumn.name,ElTableColumn)
+app.component(ElDialog.name,ElDialog)
 app.mount('#trafficPointsApp')
 

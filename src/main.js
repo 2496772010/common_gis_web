@@ -8,7 +8,9 @@ import {
     ElMenu,
     ElMenuItem,
     ElSubmenu, ElInput, ElInputNumber,
-    ElSelect, ElOption, ElForm, ElFormItem, ElCarousel, ElCarouselItem, ElImage, ElScrollbar
+    ElSelect, ElOption, ElForm, ElFormItem,
+    ElCarousel, ElCarouselItem, ElImage,
+    ElScrollbar, ElDialog
 } from 'element-plus';
 import App from './App.vue';
 // 如果要使用.scss样式文件，则需要引入base.scss文件
@@ -30,8 +32,9 @@ app.component(ElSelect.name, ElSelect)
 app.component(ElOption.name, ElOption)
 app.component(ElForm.name, ElForm)
 app.component(ElFormItem.name, ElFormItem)
-app.component(ElCarousel.name,ElCarousel)
-app.component(ElCarouselItem.name,ElCarousel)
-app.component(ElImage.name,ElImage)
-app.component(ElScrollbar.name,ElScrollbar)
+app.component(ElCarousel.name, ElCarousel)
+app.component(ElCarouselItem.name, ElCarousel)
+app.component(ElImage.name, ElImage)
+app.component(ElScrollbar.name, ElScrollbar)
+app.component(ElDialog.name, ElDialog)
 app.mount('#app')
