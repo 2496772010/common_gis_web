@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "build:trafficPoints": "vue-cli-service build --mode trafficePoints"
   },
   "dependencies": {
     "@supermap/iclient-ol": "^10.1.2",
@@ -33,6 +34,9 @@
     "eslint-plugin-vue": "^7.0.0",
     "file-save": "^0.2.0",
     "style-resources-loader": "^1.5.0",
+    "unplugin-auto-import": "^0.7.2",
+    "unplugin-element-plus": "^0.4.0",
+    "unplugin-vue-components": "^0.19.5",
     "vue-cli-plugin-style-resources-loader": "^0.1.5"
   },
   "eslintConfig": {

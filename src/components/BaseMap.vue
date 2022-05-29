@@ -70,7 +70,14 @@
         })
         this.map = new Map({
           target: 'map',
-          controls: control.defaults({attributionOptions: {collapsed: false}}).extend([new Logo()]),
+          logo:false,
+          controls: control.defaults(
+                  {
+                    attribution:false,
+                    attributionOptions: {
+                      collapsed: false,collapsible:false
+                    }
+                  }).extend([new Logo()]),
           view: this.view
         });
         this.map.addLayer(this.baseLayer);
@@ -87,7 +94,7 @@
   #map {
     position: absolute;
     width: 100%;
-    height: 99%;
+    height: 100%;
     left: 0;
     top: 0;
   }
