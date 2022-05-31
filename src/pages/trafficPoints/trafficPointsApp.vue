@@ -23,7 +23,7 @@
                                 :label="item.value"
                                 :key="index"></el-option>
                     </el-select>
-                    <el-button style="margin-left: 10px" type="primary">新增</el-button>
+                    <el-button style="margin-left: 10px" type="primary" @click="onXzClick">新增</el-button>
 
                 </el-form-item>
                 <el-form-item label="点颜色">
@@ -38,6 +38,14 @@
         >
       </span>
             </template>
+        </el-dialog>
+        <el-dialog
+                v-model="xzVisible"
+                title="新增"
+                :show-close="false"
+                :close-on-click-modal="false"
+        >
+
         </el-dialog>
         <el-table
                 style="position: fixed;right: 10px;bottom: 10px;width: 20vw;max-height: 30vh;overflow-x: hidden "
@@ -87,7 +95,8 @@
                 },
                 color: 'rgb(255,0,0)',
                 feature: null,
-                features: []
+                features: [],
+                xzVisible:false
             }
         },
         mounted() {
@@ -141,6 +150,10 @@
             },
             onselectionchange(value) {
                 console.log(value)
+            },
+            onXzClick(){
+                this.xzVisible=true
+
             }
         }
     }
