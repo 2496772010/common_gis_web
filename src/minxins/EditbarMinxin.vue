@@ -5,7 +5,6 @@
     import Notification from 'ol-ext/control/Notification'
     import EditBar from 'ol-ext/control/EditBar'
     import Select from 'ol/interaction/Select'
-    import Tooltip from 'ol-ext/overlay/Tooltip'
 
     import {Vector as VectorLayer} from 'ol/layer'
     import {Vector as VectorSource} from 'ol/source'
@@ -55,7 +54,7 @@
                         Split: false,
                         Offset: false,
                         Delete:'点击删除',
-                        Info:'点击查看详细信息'
+                        Info:false
                     },
                     source: source
                 })

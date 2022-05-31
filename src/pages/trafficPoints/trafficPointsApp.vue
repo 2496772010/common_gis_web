@@ -6,7 +6,7 @@
                 v-model="dialogVisible"
                 title="添加点"
                 width="30%"
-                show-close
+                :show-close="false"
                 draggable
                 :close-on-click-modal="false"
 
@@ -16,13 +16,15 @@
                     <el-select v-model="value"
                                @change="onChange"
                                placeholder="请输入或选择类型"
-                               allow-create clearable filterable>
+                               clearable filterable>
                         <el-option
                                 v-for="(item,index) in types"
-                                :value="item"
-                                :label="item"
+                                :value="item.color"
+                                :label="item.value"
                                 :key="index"></el-option>
                     </el-select>
+                    <el-button style="margin-left: 10px" type="primary">新增</el-button>
+
                 </el-form-item>
                 <el-form-item label="点颜色">
                     <el-color-picker color-format="rgb" v-model="color"></el-color-picker>
@@ -30,7 +32,7 @@
             </el-form>
             <template #footer>
       <span class="dialog-footer">
-        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button @click="onCloseClick">取消</el-button>
         <el-button type="primary" @click="onConfirmClick"
         >确定</el-button
         >
@@ -38,11 +40,12 @@
             </template>
         </el-dialog>
         <el-table
-                style="position: fixed;right: 10px;bottom: 10px;width: 200px;max-height: 30vh;overflow-x: hidden "
+                style="position: fixed;right: 10px;bottom: 10px;width: 20vw;max-height: 30vh;overflow-x: hidden "
                 :data="features"
                 fit
-                height="200"
+                height="30vh"
                 v-show="features.length"
+                @selection-change="onselectionchange"
         >
             <el-table-column prop="type" label="事件类型"></el-table-column>
             <el-table-column prop="color" label="颜色">
@@ -50,7 +53,9 @@
                     <div style="width: 40px;height: 20px" :style="{background:scope.row.color}"></div>
                 </template>
             </el-table-column>
+            <el-table-column type="selection" prop="显示"></el-table-column>
         </el-table>
+        <el-button style="position: absolute;right: 20px;top: 20px" type="success">保存</el-button>
     </div>
 </template>
 
@@ -69,8 +74,13 @@
         data() {
             return {
                 dialogVisible: false,
-                value: '出租车',
-                types: ['出租车'],
+                value: 'rgb(255,0,0)',
+                types: [
+                    {value: '出租车', color: 'rgb(255,0,0)'},
+                    {value: '小车', color: 'rgb(255,206,102)'},
+                    {value: '货车', color: 'rgb(139,201,255)'},
+                    {value: '客车', color: 'rgb(131,255,61)'},
+                ],
                 images: {
                     locationPng,
                     dotPng
@@ -108,22 +118,29 @@
                 this.feature.setProperties({
                     type: this.value
                 })
-                this.dialogVisible = false
-                if (!this.features.filter(value => {
-                    return value.color === this.color && this.value === value.type
-                }).length) {
+                let isAdd = this.features.find(value => {
+                    return value.color === this.color || this.value === value.type
+                })
+                if (!isAdd) {
                     this.features.push({
                         feature: this.feature,
                         color: this.color,
                         type: this.value
                     })
-
                 }
+                this.dialogVisible = false
+            },
+            onCloseClick() {
+                this.dialogVisible = false
+                if (this.feature) this.m_vector.getSource().removeFeature(this.feature)
             },
             onChange(value) {
                 if (this.types.indexOf(value) < 0) {
                     this.types.push(value)
                 }
+            },
+            onselectionchange(value) {
+                console.log(value)
             }
         }
     }
