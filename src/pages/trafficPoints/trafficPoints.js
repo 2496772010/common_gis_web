@@ -1,14 +1,14 @@
 import {createApp} from 'vue'
 import {
-    ElButton,
-    ElAutocomplete,
-    ElAside,
-    ElContainer,
-    ElMain,
-    ElMenu,
-    ElMenuItem,
-    ElSubmenu, ElInput, ElInputNumber,
-    ElSelect, ElOption, ElForm, ElFormItem, ElTable, ElTableColumn, ElDialog, ElColorPicker
+  ElButton,
+  ElAutocomplete,
+  ElAside,
+  ElContainer,
+  ElMain,
+  ElMenu,
+  ElMenuItem,
+  ElSubmenu, ElInput, ElInputNumber,
+  ElSelect, ElOption, ElForm, ElFormItem, ElTable, ElTableColumn, ElDialog, ElColorPicker, ElUpload
 } from 'element-plus';
 import App from './trafficPointsApp.vue';
 // 如果要使用.scss样式文件，则需要引入base.scss文件
@@ -34,5 +34,6 @@ app.component(ElTable.name, ElTable)
 app.component(ElTableColumn.name, ElTableColumn)
 app.component(ElDialog.name, ElDialog)
 app.component(ElColorPicker.name, ElColorPicker)
+app.component(ElUpload.name,ElUpload)
 app.mount('#trafficPointsApp')
 
