@@ -49,11 +49,11 @@
         var mainbar = new Bar();
         this.map.addControl(mainbar);
 
-        var editbar = new Bar({
+        this.editbar = new Bar({
           toggleOne: true,
           group: false
         });
-        mainbar.addControl(editbar);
+        mainbar.addControl(this.editbar);
 
         // Add selection tool:
         //  1- a toggle control with a select interaction

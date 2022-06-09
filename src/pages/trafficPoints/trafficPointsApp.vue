@@ -69,7 +69,20 @@
       </template>
     
     </el-dialog>
+    <el-select
+        @change="onFilterChange"
+        placeholder="请输入需要筛选的类型"
+        default-first-option
+        :reserve-keyword="false"
+        style="position: fixed;right: 10px;bottom: 32vh;width: 20vw;"
+        v-model="filter" clearable multiple allow-create filterable>
+      <el-option v-for="(item,index) in filterList" :key="index"
+                 :label="item"
+                 :value="item"
+      ></el-option>
+    </el-select>
     <el-table
+        ref="table"
         style="position: fixed;right: 10px;bottom: 10px;width: 20vw;max-height: 30vh;overflow-x: hidden "
         :data="types"
         fit
@@ -85,18 +98,20 @@
       </el-table-column>
       <el-table-column type="selection" prop="显示"></el-table-column>
     </el-table>
-    <el-button  @click="goDraw" style="position: absolute;right: 40px;top: 20px" type="success" >继续绘制</el-button>
-  
+    <el-button @click="goDraw" style="position: absolute;right: 40px;top: 20px" type="success">继续绘制</el-button>
+    
     <el-button style="position: absolute;right: 40px;top: 80px" type="success" @click="exportCurData">导出当前</el-button>
     <el-upload style="position: absolute;right: 40px;top: 140px"
                action=""
                :auto-upload="false"
                :limit="1"
                :on-change="onFileChange"
+               :file-list="fileList"
+               ref="upload"
     >
       <el-button type="primary">点击导入</el-button>
     </el-upload>
-    
+  
   </div>
 </template>
 
@@ -139,7 +154,10 @@
         features: [],
         xzVisible: false,
         featureLayer: null,
-        imageLayer: null
+        imageLayer: null,
+        fileList: [],
+        filter: '',
+        filterList: []
       }
     },
     mounted() {
@@ -183,12 +201,13 @@
           }))
           this.feature.setProperties({
             type: this.value.value,
-            uid: this.value.uid
+            uid: this.value.uid,
+            color: this.value.color,
           })
           this.features.push({
             feature: this.feature,
             color: this.color,
-            type: this.value,
+            type: this.value.value,
             uid: this.value.uid,
 
           })
@@ -224,6 +243,9 @@
         mFeature = mFeature.map(v => v.feature)
         this.featureLayer.getSource().addFeatures(mFeature)
         this.m_vector.setVisible(false)
+        this.m_editBar.setActive(false)
+        this.featureLayer.setVisible(true)
+        this.m_editBar.setVisible(false)
       },
       onXzClick() {
         this.xzVisible = true
@@ -261,15 +283,70 @@
           let geojson = e.target.result;
           geojson = JSON.parse(geojson)
           this.types = geojson.types
+          new GeoJSON().readFeatures(geojson).forEach(f => {
+            let prp = f.getProperties()
+            f.setStyle(new Style({
+              image: new Circle({
+                radius: 5,
+                fill: new Fill({
+                  color: prp.color
+                })
+              }),
+              stroke: new Stroke({
+                width: 1,
+                color: 'rgb(0,0,0)'
+              }),
+              text: new TextStyle({
+                text: prp.type,
+                offsetY: 20,
+                scale: 1.2
+              })
+            }))
+            this.features.push({
+              feature: f,
+              color: prp.color,
+              type: prp.types,
+              uid: prp.uid,
+            })
+          })
           this.featureLayer.setSource(new VectorSource({
-            features: new GeoJSON().readFeatures(geojson)
+            features: this.features.map(f => f.feature),
           }))
-          this.m_vector.setVisible(false)
+          this.m_vector.getSource().clear()
+          this.m_vector.getSource().addFeatures(this.features.map(f => f.feature))
+          this.m_editBar.setActive(true)
+          this.featureLayer.setVisible(true)
+          this.m_editBar.setVisible(false)
+          this.fileList = []
+          this.$refs.upload.clearFiles()
+
         }
       },
-      goDraw(){
+      goDraw() {
         this.m_vector.setVisible(true)
         this.featureLayer.setVisible(false)
+        this.m_editBar.setActive(true)
+        this.m_editBar.setVisible(true)
+      },
+      onFilterChange(value) {
+        let selectIndexs=[]
+        this.types.forEach((t,index)=>{
+          value.forEach(v=>{
+            if(t.value.search(v)!==-1){
+              selectIndexs.push(index)
+            }
+          })
+          
+        })
+        for (let i = 0; i < this.types.length; i++) {
+          if(selectIndexs.includes(i)){
+            this.$refs.table.toggleRowSelection(this.types[i],true)
+          }else {
+            this.$refs.table.toggleRowSelection(this.types[i],false)
+
+          }
+        }
+        
       }
     }
   }
