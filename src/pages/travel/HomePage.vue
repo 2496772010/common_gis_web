@@ -140,6 +140,6 @@
 </script>
 
 <style lang="less" scoped>
-    @import "./css/Homepage";
+    @import "css/Homepage";
 
 </style>

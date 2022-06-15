@@ -1,6 +1,6 @@
 <template>
   <div id="trafficPointsApp">
-    <base-map @mapCreated="onMapCreated">
+    <base-map :base-layer="baseLayer" @mapCreated="onMapCreated">
     </base-map>
     <el-dialog
         v-model="dialogVisible"
@@ -123,7 +123,7 @@
   import {Style, Fill, Circle, Stroke, Text as TextStyle} from 'ol/style'
   import {ElMessage} from 'element-plus'
   import {Vector as VectorLayer, Tile as TileLayer} from 'ol/layer'
-  import {Vector as VectorSource} from 'ol/source'
+  import {Vector as VectorSource,XYZ} from 'ol/source'
   import {guid} from "../../utils";
   import {transformExtent} from 'ol/proj'
   import {saveAs} from 'file-saver'
@@ -157,7 +157,12 @@
         imageLayer: null,
         fileList: [],
         filter: '',
-        filterList: []
+        filterList: [],
+        baseLayer:new TileLayer({
+          source:new XYZ({
+            url:'http://localhost:7000/data/{z}/{x}/{y}.png'
+          })
+        })
       }
     },
     mounted() {
@@ -170,12 +175,12 @@
           this.dialogVisible = true
           this.feature = e.feature
         });
-        let extent = new transformExtent([11525567.0814528, 3435463.509567, 11576460.4977151, 3472754.2219682], 'EPSG:3857', 'EPSG:4326')
         this.featureLayer = new VectorLayer({
           source: new VectorSource()
         })
         map.addLayer(this.featureLayer)
-        map.getView().fit(extent)
+        map.getView().setCenter([103.76452644459323,29.614513301086824])
+        map.getView().setZoom(11)
       },
       onConfirmClick() {
         if (this.value === '') {

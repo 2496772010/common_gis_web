@@ -8,7 +8,7 @@
     import BaseMap from "../../../components/BaseMap";
     import {Heatmap as HeatMapLayer} from 'ol/layer'
     import {createHeatMapSource} from "../../../utils";
-    import {TRAVEL_CODES} from "../../../GaoDeCodeconfig";
+    import {TRAVEL_CODES} from "../../../config/GaoDeCodeconfig";
 
     export default {
         name: "JdHeatmap",

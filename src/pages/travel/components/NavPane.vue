@@ -1,11 +1,11 @@
 <template>
   <div class="nav-pane">
-    <el-form label-suffix="：" inline label-position="right" label-width="auto" size="mini">
-      <el-form-item label="小区">
+    <el-form  label-suffix="：" label-width="auto" inline label-position="right">
+      <el-form-item label="起点">
         <el-autocomplete
             v-model="startInput"
             :fetch-suggestions="querySearchAsyncStart"
-            :placeholder="'请输小区名查找'+mode"
+            :placeholder="'请输起点查找'+mode"
             @select="handleSelectStart"
         >
           <template #default="{ item }">
@@ -13,23 +13,11 @@
           </template>
         </el-autocomplete>
       </el-form-item>
-      <el-form-item label="设施类型">
-        <el-select v-model="houseType">
-          <el-option v-for="(item,index) in codes"
-                     :label="item.label"
-                     :value="item.value"
-                     :key="index">
-          
-          </el-option>
-        </el-select>
-      </el-form-item>
       <el-form-item label="范围">
-        <el-input-number :min="1000" :max="10000" v-model="distance" step="100">
-        
-        </el-input-number>
+        <el-input-number :min="1000" :max="10000" :v-model="distance"></el-input-number>
         m
       </el-form-item>
-      <el-form-item style="display: flex;justify-content: center;align-items: center">
+      <el-form-item  style="display: flex;justify-content: center;align-items: center">
         <el-button @click="confirmClick">确定</el-button>
         <el-button @click="resetClick">重置</el-button>
       </el-form-item>
@@ -40,12 +28,11 @@
 <script>
   import api from "../../../api";
   import {aroundAnalysis} from "../../../utils";
+  import {TRAVEL_CODES, restaurant_code, vecation_code} from "../../../config/GaoDeCodeconfig";
   import {toRaw} from '@vue/reactivity';
-  import {GYM_CODE, MEDICAL_CODE, SHOP_CODE, vecation_code} from "../../../GaoDeCodeconfig";
-
 
   export default {
-    name: "SearchAround",
+    name: "NavPane",
     props: {
       mode: {type: String, default: () => ''}
     },
@@ -55,22 +42,7 @@
         endInput: '',
         targetLocation: '',
         originLocation: '',
-        houseType: vecation_code,
-        distance: 1000,
-        codes: [{
-          label: '购物',
-          value: SHOP_CODE
-        }, {
-          label: '交通',
-          value: vecation_code
-        }, {
-          label: '医疗',
-          value: MEDICAL_CODE
-        }, {
-          label: '体育休闲',
-          value: GYM_CODE
-        }
-        ]
+        distance: 3000
       }
     },
     methods: {
@@ -94,17 +66,19 @@
         this.targetLocation = value.location
       },
       confirmClick() {
+        let obj = {
+          "酒店": restaurant_code,
+          "景点": TRAVEL_CODES,
+          "车站": vecation_code
+        }
         this.$emit('confirmClick',
           {
-            source: aroundAnalysis(this.originLocation, this.distance, this.houseType, this.mode),
+            source: aroundAnalysis(this.originLocation, this.distance, obj[this.mode], this.mode),
             point: this.originLocation
           }
         )
       },
       resetClick() {
-        this.distance = 1000
-        this.startInput = ''
-        this.$parent.layer.getSource().clear()
       }
 
     }
@@ -115,7 +89,7 @@
   .nav-pane {
     position: absolute;
     top: 30px;
-    left: 80px;
+    left: 40px;
     z-index: 99;
     width: 300px;
     height: 200px;
@@ -125,5 +99,6 @@
     border-radius: 4px;
     opacity: 0.75;
     padding: 10px;
+
   }
 </style>

@@ -6,7 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "build:trafficPoints": "vue-cli-service build --mode trafficePoints"
+    "build:app": "vue-cli-service build --app trafficPoints"
   },
   "dependencies": {
     "@supermap/iclient-ol": "^10.1.2",
