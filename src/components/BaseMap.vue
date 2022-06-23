@@ -8,26 +8,9 @@
   import TileLayer from 'ol/layer/Tile';
   import * as control from 'ol/control';
   import {Logo} from '@supermap/iclient-ol';
-  // import {SpatialAnalystService} from '@supermap/iclient-ol/services/index'
   import {SuperMapCloud} from '@supermap/iclient-ol/mapping/index'
-  // import {
-  //     BufferDistance,
-  //     BufferEndType,
-  //     BufferSetting,
-  //     GeometryBufferAnalystParameters
-  // } from '@supermap/iclient-ol/index'
   import '@supermap/iclient-ol/dist/iclient-openlayers.css'
-  // import {Vector as VectorLayer,Heatmap as HeatMapLayer} from 'ol/layer'
-  // import {Vector as VectorSource} from 'ol/source'
-  // import {GeoJSON} from 'ol/format'
-  // import Feature from 'ol/Feature';
-  // import {Point, Circle, LineString} from 'ol/geom';
-  // import {Draw} from 'ol/interaction'
-  // import {Icon as IconStyle, Style, Text as TextStyle} from 'ol/style'
   import 'ol/ol.css'
-  // import api from './api'
-  // import {ElMessage} from 'element-plus'
-  // import Overlay from 'ol/Overlay'
 
   export default {
     name: "BaseMap",
@@ -85,7 +68,6 @@
           this.$emit('mapCreated', this.map)
         })
       }
-
     }
   }
 </script>

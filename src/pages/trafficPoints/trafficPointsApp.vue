@@ -69,6 +69,16 @@
       </template>
     
     </el-dialog>
+    <el-select v-model="filterCopy"
+    ></el-select>
+      <el-date-picker
+              v-model="timeExtent"
+              type="datetimerange"
+              range-separator="到"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              format="YYYY-MM-DD"
+      />
     <el-select
         @change="onFilterChange"
         placeholder="请输入需要筛选的类型"
@@ -125,9 +135,9 @@
   import {Vector as VectorLayer, Tile as TileLayer} from 'ol/layer'
   import {Vector as VectorSource,XYZ} from 'ol/source'
   import {guid} from "../../utils";
-  import {transformExtent} from 'ol/proj'
   import {saveAs} from 'file-saver'
   import GeoJSON from 'ol/format/GeoJSON'
+
 
 
   export default {
@@ -162,7 +172,10 @@
           source:new XYZ({
             url:'http://localhost:7000/data/{z}/{x}/{y}.png'
           })
-        })
+        }),
+        filterListCopy:[],
+        filterCopy:[],
+        timeExtent:[],
       }
     },
     mounted() {

@@ -20,6 +20,7 @@
                       @mapCreated="onMapCreated">
             </base-map>
             <navigation-pane
+                    v-loading="loading"
                     :is-location-show="true"
                     id="navPane"
                     ref="navPane"
@@ -80,11 +81,11 @@
     import {ICON_STYLE} from "../../config";
     import apiRoute from '../../api/apiRoute'
     import api from '../../api'
-    import {clearCookie, fitLayer, getGeojsonSource, routeAnalysis} from '../../utils';
+    import {clearCookie, fitLayer, routeAnalysis} from '../../utils';
     import GeolocationButton from "ol-ext/control/GeolocationButton"
     import "ol-ext/control/GeolocationBar.css"
     import {tianditu, mapboxLayers, gaodeLayers} from '../../config/baseLayersConfig'
-    import {ElMessage, ElLoading} from 'element-plus'
+    import { ElMessage } from 'element-plus'
     import {mapParams} from "../../config/mapConfig";
 
     import moment from 'moment'
@@ -225,18 +226,16 @@
                 return moment(date).format('YYYY-MM-DD HH:mm:ss')
             },
             async rowClick(row) {
-                let loading = ElLoading.service({
-                    target: 'navPane',
-                })
+
                 routeAnalysis(row.start, row.end).then(res => {
                     this.zjLayer.setSource(res[0])
                     this.map.render()
                     fitLayer(this.map, res[0])
-                    loading.close()
+                    this.loading=false
                 }).catch(err => {
                     ElMessage.error(err.toString())
                 }).finally(() => {
-                    loading.close()
+                    this.loading=false
                 })
 
             },
@@ -244,11 +243,7 @@
                 this.locationBar.setActive(true)
                 setTimeout(() => {
                     let loc = this.map.getView().getCenter().slice(0, 2).map(v => v.toFixed(5)).join(',')
-                    console.log(this.map.getView().getCenter())
-                    console.log(loc)
-                    this.loading = ElLoading.service({
-                        target: 'navPane',
-                    })
+                    this.loading = false
                     api.getRegeo({
                         location: loc
                     }).then(res => {
@@ -259,10 +254,10 @@
                         }, 500)
                     }).catch(err => {
                         ElMessage.error(err.toString())
-                        this.loading.close()
+                        this.loading=false
 
                     }).finally(() => {
-                        this.loading.close()
+                        this.loading=false
                     })
                 }, 500)
 
