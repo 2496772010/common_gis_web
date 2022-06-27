@@ -107,14 +107,15 @@
         let x = e.clientX
         let y = e.clientY
         let rect = e.target.getBoundingClientRect()
-        let gl_x = ((x - rect.left) - canvas.width / 2) / (canvas.width / 2);
-        let gl_y = (canvas.height / 2 - (y - rect.top)) / (canvas.height / 2);
+        let gl_x = ((x - rect.left) - canvas.offsetWidth / 2) / (canvas.offsetWidth / 2);
+        let gl_y = (canvas.offsetHeight / 2 - (y - rect.top)) / (canvas.offsetHeight / 2);
         let a_Position = gl.getAttribLocation(gl.program, 'a_Position')
         //将变量传给a_Position
         gl.vertexAttrib3f(a_Position, gl_x, gl_y, 0.0)
-        // gl.clearColor(0.0, 0.0, 0.0, 1.0)
-        // gl.clear(gl.COLOR_BUFFER_BIT)
+        gl.clearColor(0.0, 0.0, 0.0, 1.0)
+        gl.clear(gl.COLOR_BUFFER_BIT)
         gl.drawArrays(gl.POINTS, 0, 1)
+
     })
 
 </script>
