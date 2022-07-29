@@ -6,14 +6,15 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "build:app": "vue-cli-service build --app trafficPoints"
+    "build:app": "vue-cli-service build --app trafficPoints",
+    "build:cesium": "vue-cli-service build --app cesiumRiver  --mode cesium"
   },
   "dependencies": {
     "@supermap/iclient-ol": "^10.1.2",
     "axios": "^0.21.1",
     "cesium": "^1.95.0",
     "core-js": "^3.6.5",
-    "element-plus": "^2.2.6",
+    "element-plus": "2.2.6",
     "file-saver": "^2.0.5",
     "less": "^4.1.2",
     "less-loader": "^4.1.0",

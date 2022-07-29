@@ -5,7 +5,7 @@ const root = './src/pages/'
 const root1 = 'src/pages/'
 const pages = fs.readdirSync(root)
 let pageDict = {}
-const agrv= process.argv
+const agrv = process.argv
 pages.forEach(file => {
     const page = root + file
     pageDict[file] = {
@@ -26,10 +26,10 @@ pages.forEach(file => {
     })
 })
 let pageKey = agrv[4]
-if(pageKey){
-    let tempDict={}
-    tempDict[pageKey]=pageDict[pageKey]
-    pageDict=tempDict
+if (pageKey) {
+    let tempDict = {}
+    tempDict[pageKey] = pageDict[pageKey]
+    pageDict = tempDict
 }
 module.exports = {
     publicPath: './', // 根域上下文目录
@@ -95,4 +95,4 @@ module.exports = {
     }
 }
 
-console.log(module.exports)
+console.log(JSON.stringify(module.exports))
