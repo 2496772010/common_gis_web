@@ -12,12 +12,12 @@ export default {
 
     const initMap = () => {
       cesiumViewer = new Cesium.Viewer('cesiumContainer', {
-        animation: false,
-        timeline: false,
-        fullscreenButton: false,
-        geocoder: false,
-        baseLayerPicker: true,
-        depthTestAgainstTerrain: false
+        // animation: true,
+        // timeline: false,
+        // fullscreenButton: false,
+        // geocoder: false,
+        // baseLayerPicker: true,
+        // depthTestAgainstTerrain: false
       })
       // 初始化后传出viewer实例
       emit('onViewerCreated', cesiumViewer)
