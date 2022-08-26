@@ -99,15 +99,49 @@ export async function addExtrudedGeoJsonAsPrimitive(viewer, url, exHeightFieldNa
             uniforms: {
                 my_opacity: 0.5
             },
-            source: `czm_material czm_getMaterial(czm_materialInput materialInput)
-    {        
-        czm_material material = czm_getDefaultMaterial(materialInput);
-        material.diffuse = vec3(materialInput.st, 0.0);
-        material.alpha = my_opacity;
-        return material;
-    }`
+    //         source: `czm_material czm_getMaterial(czm_materialInput materialInput)
+    // {
+    //     czm_material material = czm_getDefaultMaterial(materialInput);
+    //     material.diffuse = vec3(materialInput.st, 0.0);
+    //     material.alpha = my_opacity;
+    //     return material;
+    // }`,
+            vertexShaderSource: `
+        attribute vec3 position3DHigh;
+        attribute vec3 position3DLow;
+        attribute float batchId;
+        attribute vec2 st;
+        attribute vec3 normal;
+        varying vec2 v_st;
+        varying vec3 v_positionEC;
+        varying vec3 v_normalEC;
+        void main() {
+            v_st = st;
+            vec4 p = czm_computePosition();
+            v_positionEC = (czm_modelViewRelativeToEye * p).xyz;      // position in eye coordinates
+            v_normalEC = czm_normal * normal;                         // normal in eye coordinates
+            gl_Position = czm_modelViewProjectionRelativeToEye * p;
+        }
+                    `,
+            fragmentShaderSource: `
+      varying vec2 v_st;
+      varying vec3 v_positionEC;
+      varying vec3 v_normalEC;
+      void main()  {
+        vec3 positionToEyeEC = -v_positionEC;
+        vec3 normalEC = normalize(v_normalEC);
+        czm_materialInput materialInput;
+        materialInput.normalEC = normalEC;
+        materialInput.positionToEyeEC = positionToEyeEC;
+        materialInput.st = v_st;
+        gl_FragColor = vec4(1,1,0,1);
+      }
+                `
         }
     })
+    let material = new Cesium.Material.fromType("Color");
+    material.uniforms.color =  Cesium.Color.WHITE;
+
 
     let aper = new Cesium.MaterialAppearance({
         material: new Cesium.Material({
@@ -322,7 +356,40 @@ export async function addExtrudedGeoJsonAsPrimitive(viewer, url, exHeightFieldNa
             )
         })
         let appearance = new Cesium.MaterialAppearance({
-            material: m_matrial_0,
+            material: material,
+            translucent: true,
+            closed: true,
+            vertexShaderSource: `
+                attribute vec3 position3DHigh;
+                attribute vec3 position3DLow;
+                attribute vec3 normal;
+                attribute vec2 st;
+                attribute float batchId;
+
+                varying vec4 v_positionEC;
+                varying vec3 v_normalEC;
+                varying vec2 v_st;
+
+                void main()
+                {
+                    vec4 p = czm_computePosition();
+                    vec4 eyePosition = czm_modelViewRelativeToEye * p;
+                    v_positionEC =  czm_inverseModelView * eyePosition;      // position in eye coordinates
+                    v_normalEC = czm_normal * normal;                         // normal in eye coordinates
+                    v_st = st;
+
+                    gl_Position = czm_modelViewProjectionRelativeToEye * p;
+                }
+                    `,
+            fragmentShaderSource: `         
+                        varying vec4 v_positionEC;
+                        varying vec3 v_normalEC;
+                        void main() {
+                            float l = sqrt(pow(v_positionEC.x,2.0) + pow(v_positionEC.y,2.0) + pow(v_positionEC.z,2.0));
+                            float cy = fract((abs(l - 150.0))/200.0); 
+                            gl_FragColor = vec4(0.0, 0.0, cy, 0.8);
+                        }
+                `,
         })
         const primitive = new Cesium.Primitive({
             geometryInstances: new Cesium.GeometryInstance({
@@ -330,16 +397,14 @@ export async function addExtrudedGeoJsonAsPrimitive(viewer, url, exHeightFieldNa
             }),
             releaseGeometryInstances: false,
             compressVertices: false,
-            appearance: aper
+            appearance: appearance
         })
-        console.log(appearance.getFragmentShaderSource())
         viewer.scene.primitives.add(primitive)
     }
     function renderLoop(timestamp){
         aper.material.uniforms.iTime = timestamp/1000;
         requestAnimationFrame(renderLoop);
     }
-    renderLoop()
 }
 
 export async function addDataToGlobe(viewer, url, exHeightFieldName, multiply) {
